@@ -1,0 +1,35 @@
+"use server";
+
+import { Widget } from "../../../../components/widget";
+import { type KindePageEvent } from "@kinde/infrastructure";
+import { getKindeNonce, getKindeRequiredJS } from "@kinde/infrastructure";
+import React from "react";
+import { renderToString } from "react-dom/server.browser";
+import { DefaultLayout } from "../../../../layouts/default";
+import { Root } from "../../../../root";
+import { getPhoneFieldScript } from "../../../../utils/phoneFieldScript";
+
+const DefaultPage: React.FC<KindePageEvent> = ({ context, request }) => {
+  const nonce = getKindeNonce();
+  
+  return (
+    <Root context={context} request={request}>
+      {getKindeRequiredJS()}
+      <DefaultLayout>
+        <Widget heading={context.widget.content.heading} />
+      </DefaultLayout>
+      <script
+        nonce={nonce}
+        dangerouslySetInnerHTML={{
+          __html: getPhoneFieldScript(),
+        }}
+      />
+    </Root>
+  );
+};
+
+// Page Component
+export default async function Page(event: KindePageEvent): Promise<string> {
+  const page = await DefaultPage(event);
+  return renderToString(page);
+}
