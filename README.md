@@ -17,7 +17,8 @@ A fully customizable phone-as-username authentication UI template built with Rea
 ## Prerequisites
 
 - npm or yarn
-- A Kinde account with Custom UI feature enabled
+- A Kinde account
+ with Custom UI feature enabled
 
 ## Quick Start
 
