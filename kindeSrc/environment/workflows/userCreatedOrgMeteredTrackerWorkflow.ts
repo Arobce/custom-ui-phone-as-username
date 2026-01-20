@@ -10,7 +10,7 @@ import {
 // The settings for this workflow
 export const workflowSettings: WorkflowSettings = {
     id: "postAuthentication",
-    name: "HubspotSync",
+    name: "HubspotSyncccc",
     failurePolicy: {
         action: "stop",
     },
