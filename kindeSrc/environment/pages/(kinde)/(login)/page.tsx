@@ -2,7 +2,7 @@
 
 import { Widget } from "../../../../components/widget";
 import { type KindePageEvent } from "@kinde/infrastructure";
-import { getKindeNonce, getKindeRequiredJS } from "@kinde/infrastructure";
+import { getKindeNonce, getKindeRequiredJS, getKindeRegisterUrl } from "@kinde/infrastructure";
 import React from "react";
 import { renderToString } from "react-dom/server.browser";
 import { DefaultLayout } from "../../../../layouts/default";
@@ -22,6 +22,32 @@ const DefaultPage: React.FC<KindePageEvent> = ({ context, request }) => {
         nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: getPhoneFieldScript(),
+        }}
+      />
+      <script
+        nonce={nonce}
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              var registerUrl = "${getKindeRegisterUrl()}";
+
+              function checkForNoAccountError() {
+                var errorEl = document.getElementById("sign_up_sign_in_credentials_p_email_username_error_msg");
+                if (errorEl && errorEl.textContent.trim() === "No account found with this email") {
+                  window.location.href = registerUrl;
+                }
+              }
+
+              var observer = new MutationObserver(function() {
+                checkForNoAccountError();
+              });
+
+              observer.observe(document.body, { childList: true, subtree: true });
+
+              // Also check immediately in case it's already rendered
+              checkForNoAccountError();
+            })();
+          `,
         }}
       />
     </Root>
