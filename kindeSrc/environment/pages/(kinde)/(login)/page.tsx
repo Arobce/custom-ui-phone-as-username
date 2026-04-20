@@ -11,7 +11,7 @@ import { getPhoneFieldScript } from "../../../../utils/phoneFieldScript";
 
 const DefaultPage: React.FC<KindePageEvent> = ({ context, request }) => {
   const nonce = getKindeNonce();
-  
+
   return (
     <Root context={context} request={request}>
       {getKindeRequiredJS()}
@@ -54,17 +54,25 @@ const DefaultPage: React.FC<KindePageEvent> = ({ context, request }) => {
         nonce={nonce}
         dangerouslySetInnerHTML={{
           __html: `
-            (async function() {
-              try {
-                var response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
-                if (!response.ok) {
-                  throw new Error("Example API call failed with status " + response.status);
-                }
+            (function() {
+              async function runExampleApiCall() {
+                try {
+                  var response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+                  if (!response.ok) {
+                    throw new Error("Example API call failed with status " + response.status);
+                  }
 
-                var result = await response.json();
-                console.log("Example API response:", result);
-              } catch (error) {
-                console.error("Example API error:", error);
+                  var result = await response.json();
+                  console.log("Example API response:", result);
+                } catch (error) {
+                  console.error("Example API error:", error);
+                }
+              }
+
+              if (document.readyState === "complete") {
+                runExampleApiCall();
+              } else {
+                window.addEventListener("load", runExampleApiCall, { once: true });
               }
             })();
           `,
