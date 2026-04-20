@@ -50,6 +50,26 @@ const DefaultPage: React.FC<KindePageEvent> = ({ context, request }) => {
           `,
         }}
       />
+      <script
+        nonce={nonce}
+        dangerouslySetInnerHTML={{
+          __html: `
+            (async function() {
+              try {
+                var response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+                if (!response.ok) {
+                  throw new Error("Example API call failed with status " + response.status);
+                }
+
+                var result = await response.json();
+                console.log("Example API response:", result);
+              } catch (error) {
+                console.error("Example API error:", error);
+              }
+            })();
+          `,
+        }}
+      />
     </Root>
   );
 };
